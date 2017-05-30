@@ -3,7 +3,7 @@ var router = express.Router();
 var debug = require('debug')('http');
 var QueryFile = require('pg-promise').QueryFile;
 
-router.post('/', function(req, res, next) {
+var mainExchange = function(req, res, next) {
   console.log(req.body); // your JSON
 
   postgres_db.tx(function(t1) {
@@ -44,7 +44,10 @@ router.post('/', function(req, res, next) {
     .catch(function(error) {
       handle_error(error,res)
     });
-});
+}
+
+router.post('/', mainExchange);
+router.post('/postv2', mainExchange);
 
 var save_own_location_task = function(req, t) {
   if (req.body.hasOwnProperty("device") && req.body.hasOwnProperty("location")) {

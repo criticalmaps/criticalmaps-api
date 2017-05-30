@@ -1,6 +1,8 @@
-FROM node:6-alpine
+FROM node:6
 
-RUN apk --update add git
+RUN apt-get update -y && \
+  	apt-get upgrade -y && \
+    apt-get install -y git GraphicsMagick
 
 RUN mkdir -p /app/
 WORKDIR /app/
@@ -8,7 +10,7 @@ WORKDIR /app/
 RUN npm install -g node-pg-migrate pg --silent
 
 COPY package.json .
-RUN npm install --silent
+RUN npm install
 
 COPY . .
 

@@ -4,7 +4,7 @@ var expect = chai.expect;
 
 chai.use(chaiHttp);
 
-var endpoint = "https://criticalmaps-api.stephanlindauer.de:80";
+var endpoint = "http://localhost:80";
 
 var test_user_A = {
   "device": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",

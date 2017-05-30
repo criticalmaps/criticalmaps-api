@@ -10,7 +10,7 @@ var twitterClient = new Twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
-router.get('/', function(req, res, next) {
+var twitterHandler = function(req, res, next) {
   console.log("foo")
 
   twitterClient.get('search/tweets', {
@@ -23,6 +23,9 @@ router.get('/', function(req, res, next) {
       res.send(error);
     }
   });
-});
+}
+
+router.get('/', twitterHandler);
+router.get('/get.php', twitterHandler);
 
 module.exports = router;

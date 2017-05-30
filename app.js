@@ -1,6 +1,7 @@
 var express = require('express');
 var pgp = require('pg-promise')();
-var bodyParser     = require('body-parser');
+var bodyParser = require('body-parser');
+
 
 var app = express();
 
@@ -15,8 +16,11 @@ postgres_db = pgp({
 
 app.set('port', 80);
 
-app.use(bodyParser.json()); // Parses req.body json from html POST
+app.use(bodyParser.json({
+  limit: '5mb'
+})); // Parses req.body json from html POST
 app.use(bodyParser.urlencoded({
+  limit: '5mb',
   extended: true
 })); // Parses urlencoded req.body, including extended syntax
 
@@ -28,12 +32,14 @@ app.use(bodyParser.urlencoded({
 //   }));
 // });
 
-app.use('/postv2',   require('./routes/index'));
+app.use('/postv2', require('./routes/index'));
 app.use('/exchange', require('./routes/index'));
-app.use('/',         require('./routes/index'));
+app.use('/', require('./routes/index'));
 
-app.use('/twitter',         require('./routes/twitter'));
+app.use('/twitter', require('./routes/twitter'));
 app.use('/twitter/get.php', require('./routes/twitter'));
+
+app.use('/gallery', require('./routes/gallery'));
 
 app.use('/debug', require('./routes/debug'));
 

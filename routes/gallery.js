@@ -41,10 +41,12 @@ var saveImage = function(req, res, next) {
             VALUES($1, $2, $3, $4, $5)',
             [imageId, dataImage, dataThumbnail, 'pending', req.connection.remoteAddress])
             .then(function() {
-              res.send("done!!!!!!!!")
+              res.send("success")
+              // use http 200
             })
             .catch(function(error) {
               res.send("error: " + error)
+              // use http code
             });
         });
       });
@@ -55,7 +57,7 @@ router.post('/', upload.single('uploaded_image'), saveImage);
 router.post('/post.php', upload.single('uploaded_image'), saveImage);
 
 router.get('/', function(req, res, next) {
-  postgres_db.any("SELECT id FROM gallery")
+  postgres_db.any("SELECT id, longitude, latitude FROM gallery")
     .then(function(data) {
       console.log(data);
       res.send(data)

@@ -16,7 +16,6 @@
     "pg-large-object": "^2.0.0",
     "pg-promise": "^5.6.7",
     "twitter": "^1.7.0",
-    "uniqid": "^4.1.1"
   },
   "devDependencies": {
     "supertest-chai": "0.0.8",

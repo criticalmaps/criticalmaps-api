@@ -7,7 +7,6 @@ var multer = require('multer');
 var upload = multer({
   dest: '/tmp/'
 })
-var uniqid = require('uniqid');
 var sizeOf = require('image-size');
 var gm = require('gm');
 var fs = require('fs');
@@ -15,8 +14,6 @@ var fs = require('fs');
 var maxWidth = 100;
 
 var saveImage = function(req, res, next) {
-  var imageId = uniqid();
-
   var pathImage = req.file.path;
   var pathThumbnail = req.file.path + "_thumb";
 
@@ -40,9 +37,9 @@ var saveImage = function(req, res, next) {
       }
       fs.readFile(pathImage, function(err, dataImage) {
         fs.readFile(pathThumbnail, function(err, dataThumbnail) {
-          postgres_db.none('INSERT INTO gallery(id, image, thumbnail, review_state, ip) \
-            VALUES($1, $2, $3, $4, $5)',
-            [imageId, dataImage, dataThumbnail, 'pending', req.connection.remoteAddress])
+          postgres_db.none('INSERT INTO gallery(image, thumbnail, review_state, ip) \
+            VALUES($1, $2, $3, $4)',
+            [dataImage, dataThumbnail, 'pending', req.connection.remoteAddress])
             .then(function() {
               res.send("success")
               // use http 200

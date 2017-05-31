@@ -3,6 +3,10 @@ var router = express.Router();
 var debug = require('debug')('http');
 var QueryFile = require('pg-promise').QueryFile;
 
+var QUERY_FILE_SAVE_LOCATIONS  = QueryFile('sql/save_locations.sql')
+var QUERY_FILE_RETRIEVE_LOCATIONS  =QueryFile('sql/retrieve_locations.sql')
+var QUERY_FILE_SAVE_MESSAGES  =QueryFile('sql/save_messages.sql')
+
 var mainExchange = function(req, res, next) {
   console.log(req.body); // your JSON
 
@@ -51,7 +55,7 @@ router.post('/postv2', mainExchange);
 
 var save_own_location_task = function(req, t) {
   if (req.body.hasOwnProperty("device") && req.body.hasOwnProperty("location")) {
-    return t.none(QueryFile('sql/save_locations.sql'),
+    return t.none(QUERY_FILE_SAVE_LOCATIONS,
       [req.body.device, req.body.location.longitude, req.body.location.latitude]);
   } else {
     return null;
@@ -60,7 +64,7 @@ var save_own_location_task = function(req, t) {
 
 var retrieve_other_locations = function(req, t) {
   var device = req.body.device || "undefined";
-  return t.any(QueryFile('sql/locations.sql'), [device]);
+  return t.any(QUERY_FILE_RETRIEVE_LOCATIONS, [device]);
 }
 
 var save_messages_batch = function(req, t) {
@@ -85,7 +89,7 @@ var save_messages_batch = function(req, t) {
     }
 
     save_messages_batch.push(
-      t.none(QueryFile('sql/save_messages.sql'), [
+      t.none(QUERY_FILE_SAVE_MESSAGES, [
         message.text,
         delay_counter,
         ip,

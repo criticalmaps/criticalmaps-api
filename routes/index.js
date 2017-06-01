@@ -79,7 +79,7 @@ var save_messages_batch = function(req, t) {
   var save_messages_batch = [];
   var delay_counter = 0;
   req.body.messages.forEach(function(message) {
-    var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress.replace(/^.*:/, '');
     var latitude;
     var longitude;
 

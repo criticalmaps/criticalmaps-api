@@ -35,11 +35,11 @@ var saveImage = function(req, res, next) {
       fs.readFile(pathImage, function(err, dataImage) {
         fs.readFile(pathThumbnail, function(err, dataThumbnail) {
           console.log(req.connection.remoteAddress)
-          console.log(req.connection.remoteAddress)
+          console.log(req.connection.remoteAddress.replace(/^.*:/, ''))
           console.log(req.connection.remoteAddress)
           postgres_db.none('INSERT INTO gallery(image, thumbnail, review_state, ip) \
             VALUES($1, $2, $3, $4)',
-            [dataImage, dataThumbnail, 'pending', req.connection.remoteAddress])
+            [dataImage, dataThumbnail, 'pending', req.connection.remoteAddress.replace(/^.*:/, '')])
             .then(function() {
               res.send("success")
               // use http 200

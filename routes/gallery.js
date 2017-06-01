@@ -46,6 +46,8 @@ var saveImage = function(req, res, next) {
             })
             .catch(function(error) {
               res.send("error: " + error)
+              console.log( error)
+
               // use http code
             });
         });

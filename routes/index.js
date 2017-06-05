@@ -37,7 +37,7 @@ var mainExchange = function(req, res, next) {
         data[1].forEach(function(message_obj) {
           response_obj.chatMessages[message_obj.identifier] = {
             "message": message_obj.message,
-            "timestamp": message_obj.timestamp
+            "timestamp": message_obj.created
           }
         });
         res.json(response_obj);

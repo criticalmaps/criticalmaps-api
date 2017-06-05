@@ -34,19 +34,19 @@ var saveImage = function(req, res, next) {
       }
       fs.readFile(pathImage, function(err, dataImage) {
         fs.readFile(pathThumbnail, function(err, dataThumbnail) {
+          console.log(req.body);
           postgres_db.none('INSERT INTO gallery(image, thumbnail, review_state, ip, longitude, latitude) \
-            VALUES($1, $2, $3, $4)',
-            [dataImage, dataThumbnail, 'pending',
-            req.connection.remoteAddress.replace(/^.*:/, ''),
-      console.log(req.body);
-          ])
+            VALUES($1, $2, $3, $4)', [dataImage, dataThumbnail, 'pending',
+              req.connection.remoteAddress.replace(/^.*:/, ''),
+
+            ])
             .then(function() {
               res.send("success")
               // use http 200
             })
             .catch(function(error) {
               res.send("error: " + error)
-              console.log( error)
+              console.log(error)
 
               // use http code
             });
@@ -70,7 +70,9 @@ router.get('/thumbnail/:id', function(req, res, next) {
   postgres_db.one("SELECT thumbnail FROM gallery WHERE id=$1", [req.params.id])
     .then(function(data) {
       console.log(data);
-      res.writeHead(200, {'Content-Type': 'image/jpeg'});
+      res.writeHead(200, {
+        'Content-Type': 'image/jpeg'
+      });
       res.write(data.thumbnail);
       res.end();
     })
@@ -80,7 +82,9 @@ router.get('/image/:id', function(req, res, next) {
   postgres_db.one("SELECT image FROM gallery WHERE id=$1", [req.params.id])
     .then(function(data) {
       console.log(data);
-      res.writeHead(200, {'Content-Type': 'image/jpeg'});
+      res.writeHead(200, {
+        'Content-Type': 'image/jpeg'
+      });
       res.write(data.image);
       res.end();
     });

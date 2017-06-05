@@ -34,11 +34,11 @@ var saveImage = function(req, res, next) {
       }
       fs.readFile(pathImage, function(err, dataImage) {
         fs.readFile(pathThumbnail, function(err, dataThumbnail) {
-          console.log(req.body);
           postgres_db.none('INSERT INTO gallery(image, thumbnail, review_state, ip, longitude, latitude) \
             VALUES($1, $2, $3, $4)', [dataImage, dataThumbnail, 'pending',
               req.connection.remoteAddress.replace(/^.*:/, ''),
-
+              JSON.parse(req.body.data).longitude,
+              JSON.parse(req.body.data).latitude
             ])
             .then(function() {
               res.send("success")

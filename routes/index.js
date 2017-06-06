@@ -3,9 +3,9 @@ var router = express.Router();
 var debug = require('debug')('http');
 var QueryFile = require('pg-promise').QueryFile;
 
-var QUERY_FILE_SAVE_LOCATIONS  = QueryFile('sql/save_locations.sql')
-var QUERY_FILE_RETRIEVE_LOCATIONS  =QueryFile('sql/retrieve_locations.sql')
-var QUERY_FILE_SAVE_MESSAGES  =QueryFile('sql/save_messages.sql')
+var QUERY_FILE_SAVE_LOCATIONS = QueryFile('sql/save_locations.sql')
+var QUERY_FILE_RETRIEVE_LOCATIONS = QueryFile('sql/retrieve_locations.sql')
+var QUERY_FILE_SAVE_MESSAGES = QueryFile('sql/save_messages.sql')
 
 var mainExchange = function(req, res, next) {
   console.log(req.body); // your JSON
@@ -42,11 +42,11 @@ var mainExchange = function(req, res, next) {
         });
         res.json(response_obj);
       }).catch(function(error) {
-        handle_error(error,res)
+        handle_error(error, res)
       });
     })
     .catch(function(error) {
-      handle_error(error,res)
+      handle_error(error, res)
     });
 }
 
@@ -55,8 +55,7 @@ router.post('/postv2', mainExchange);
 
 var save_own_location_task = function(req, t) {
   if (req.body.hasOwnProperty("device") && req.body.hasOwnProperty("location")) {
-    return t.none(QUERY_FILE_SAVE_LOCATIONS,
-      [req.body.device, req.body.location.longitude, req.body.location.latitude]);
+    return t.none(QUERY_FILE_SAVE_LOCATIONS, [req.body.device, req.body.location.longitude, req.body.location.latitude]);
   } else {
     return null;
   }
@@ -107,7 +106,7 @@ var retrieve_chat_messages = function(req, t) {
   return t.any("SELECT * FROM chat_messages WHERE created > (NOW() - '$1 minutes'::INTERVAL)", [30]);
 }
 
-var handle_error = function(error,res) {
+var handle_error = function(error, res) {
   console.log("ERROR:", error.message || error);
   res.status(500).json({
     error: error.message

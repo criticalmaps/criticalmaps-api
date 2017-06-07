@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var debug = require('debug')('http');
 var QueryFile = require('pg-promise').QueryFile;
+var moment = require('moment')
 
 var QUERY_FILE_SAVE_LOCATIONS = QueryFile('sql/save_locations.sql')
 var QUERY_FILE_RETRIEVE_LOCATIONS = QueryFile('sql/retrieve_locations.sql')

@@ -28,7 +28,7 @@ var mainExchange = function(req, res, next) {
           response_obj.locations[location_obj.device] = {
             "longitude": location_obj.longitude,
             "latitude": location_obj.latitude,
-            "timestamp": moment(location_obj.updated).valueOf()
+            "timestamp": Math.floor(moment(location_obj.updated).valueOf() / 1000)
 
           }
         });
@@ -36,7 +36,7 @@ var mainExchange = function(req, res, next) {
         data[1].forEach(function(message_obj) {
           response_obj.chatMessages[message_obj.identifier] = {
             "message": message_obj.message,
-            "timestamp": moment(message_obj.created).valueOf()
+            "timestamp": Math.floor(moment(message_obj.created).valueOf() / 1000)
           }
         });
         res.json(response_obj);
@@ -114,3 +114,8 @@ var handle_error = function(error, res) {
 }
 
 module.exports = router;
+
+
+1496548800
+1496857692.83
+1496857692834

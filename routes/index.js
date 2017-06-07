@@ -8,8 +8,6 @@ var QUERY_FILE_RETRIEVE_LOCATIONS = QueryFile('sql/retrieve_locations.sql')
 var QUERY_FILE_SAVE_MESSAGES = QueryFile('sql/save_messages.sql')
 
 var mainExchange = function(req, res, next) {
-  console.log(req.body); // your JSON
-
   postgres_db.tx(function(t1) {
       return t1.batch([
         save_messages_batch(req, t1),
@@ -30,14 +28,15 @@ var mainExchange = function(req, res, next) {
           response_obj.locations[location_obj.device] = {
             "longitude": location_obj.longitude,
             "latitude": location_obj.latitude,
-            "timestamp": location_obj.updated
+            "timestamp": moment(location_obj.updated).valueOf()
+
           }
         });
 
         data[1].forEach(function(message_obj) {
           response_obj.chatMessages[message_obj.identifier] = {
             "message": message_obj.message,
-            "timestamp": message_obj.created
+            "timestamp": moment(message_obj.created).valueOf()
           }
         });
         res.json(response_obj);
@@ -51,6 +50,7 @@ var mainExchange = function(req, res, next) {
 }
 
 router.post('/', mainExchange);
+router.get('/', mainExchange);
 router.post('/postv2', mainExchange);
 
 var save_own_location_task = function(req, t) {

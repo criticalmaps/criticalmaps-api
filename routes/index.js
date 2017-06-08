@@ -115,8 +115,3 @@ var handle_error = function(error, res) {
 }
 
 module.exports = router;
-
-
-1496548800
-1496857692.83
-1496857692834

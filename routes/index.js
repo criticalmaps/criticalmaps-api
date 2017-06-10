@@ -9,6 +9,7 @@ var QUERY_FILE_RETRIEVE_LOCATIONS = QueryFile('sql/retrieve_locations.sql')
 var QUERY_FILE_SAVE_MESSAGES = QueryFile('sql/save_messages.sql')
 
 var mainExchange = function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
   postgres_db.tx(function(t1) {
       return t1.batch([
         save_messages_batch(req, t1),

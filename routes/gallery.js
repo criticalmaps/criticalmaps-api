@@ -59,6 +59,7 @@ router.post('/', upload.single('uploaded_file'), saveImage);
 router.post('/post.php', upload.single('uploaded_file'), saveImage);
 
 router.get('/', function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
   postgres_db.any("SELECT id, longitude, latitude FROM gallery")
     .then(function(data) {
       console.log(data);
@@ -67,6 +68,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/thumbnail/:id', function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
   postgres_db.one("SELECT thumbnail FROM gallery WHERE id=$1", [req.params.id])
     .then(function(data) {
       console.log(data);
@@ -79,6 +81,7 @@ router.get('/thumbnail/:id', function(req, res, next) {
 });
 
 router.get('/image/:id', function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
   postgres_db.one("SELECT image FROM gallery WHERE id=$1", [req.params.id])
     .then(function(data) {
       console.log(data);

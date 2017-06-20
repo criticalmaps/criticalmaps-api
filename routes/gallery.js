@@ -62,7 +62,6 @@ router.get('/', function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   postgres_db.any("SELECT id, longitude, latitude FROM gallery")
     .then(function(data) {
-      console.log(data);
       res.send(data)
     })
 });

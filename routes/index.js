@@ -30,8 +30,9 @@ var mainExchange = function(req, res, next) {
           response_obj.locations[location_obj.device] = {
             "longitude": location_obj.longitude,
             "latitude": location_obj.latitude,
-            "timestamp": Math.floor(moment(location_obj.updated).valueOf() / 1000)
-
+            "timestamp": Math.floor(moment(location_obj.updated).valueOf() / 1000),
+            "name": location_obj.name,
+            "color": location_obj.color
           }
         });
 
@@ -57,7 +58,12 @@ router.post('/postv2', mainExchange);
 
 var save_own_location_task = function(req, t) {
   if (req.body.hasOwnProperty("device") && req.body.hasOwnProperty("location")) {
-    return t.none(QUERY_FILE_SAVE_LOCATIONS, [req.body.device, req.body.location.longitude, req.body.location.latitude]);
+    var longitude = req.body.location.longitude;
+    var latitude = req.body.location.latitude;
+    var device = req.body.device;
+    var name = req.body.name;
+    var color = req.body.color;
+    return t.none(QUERY_FILE_SAVE_LOCATIONS, [device, longitude, latitude, name, color]);
   } else {
     return null;
   }

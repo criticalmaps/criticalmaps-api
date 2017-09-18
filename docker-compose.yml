@@ -7,9 +7,9 @@ services:
       POSTGRES_PASSWORD: bla
       POSTGRES_DB: criticalmaps
     ports:
-      - "5432:5432"
+      - "5432:5433"
     expose:
-        - "5432"
+        - "5433"
     restart: always
 
   web:
@@ -23,12 +23,7 @@ services:
     environment:
       NODE_ENV: production
       DEBUG: "*"
-      POSTGRES_USER: bla
-      POSTGRES_PASSWORD: bla
-      POSTGRES_PORT: 5432
-      POSTGRES_DB: criticalmaps
-      POSTGRES_HOST: db
-      DATABASE_URL: postgres://bla:bla@db/criticalmaps
+      DATABASE_URL: postgres://bla:bla@db:5433/criticalmaps
     links:
       - db
     restart: always

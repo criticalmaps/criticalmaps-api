@@ -7,9 +7,7 @@ services:
       POSTGRES_PASSWORD: bla
       POSTGRES_DB: criticalmaps
     ports:
-      - "5432:5433"
-    expose:
-        - "5433"
+      - "5433:5432"
     restart: always
 
   web:

@@ -10,6 +10,7 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
+    "form-data": "^2.2.0",
     "gm": "^1.23.0",
     "image-size": "^0.5.4",
     "moment": "^2.18.1",

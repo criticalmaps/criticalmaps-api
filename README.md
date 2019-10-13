@@ -1,37 +1,43 @@
-# Critical Maps API
+# Welcome to Revel
 
-[![Build Status](https://travis-ci.org/criticalmaps/criticalmaps-api.svg?branch=master)](https://travis-ci.org/criticalmaps/criticalmaps-api)
-[![Code Climate](https://codeclimate.com/github/criticalmaps/criticalmaps-api/badges/gpa.svg)](https://codeclimate.com/github/criticalmaps/criticalmaps-api)
-[![Test Coverage](https://codeclimate.com/github/criticalmaps/criticalmaps-api/badges/coverage.svg)](https://codeclimate.com/github/criticalmaps/criticalmaps-api/coverage)
-[![Dependency Status](https://gemnasium.com/criticalmaps/criticalmaps-api.svg)](https://gemnasium.com/criticalmaps/criticalmaps-api)
+A high-productivity web framework for the [Go language](http://www.golang.org/).
 
-## Start development session with:
 
-```docker-compose -f docker-compose.dev.yml up --build```
+### Start the web server:
 
-### Api will be available under:
-http://localhost:3000
+   revel run myapp
 
-### Debugger will be available at:
-http://localhost:8080/?port=5858
+### Go to http://localhost:9000/ and you'll see:
 
-### phpPgAdmin is at:
-http://localhost:8082/phppgadmin/
+    "It works"
 
-## Migrations
+## Code Layout
 
-```
-docker build -t criticalmaps-db-migrations -f Dockerfile.migrations . && \
-docker run \
--v $(pwd)/migrations/:/migrations/ \
--e DATABASE_URL=postgres://bla:bla@db/criticalmaps \
-criticalmaps-db-migrations \
-up
-```
+The directory structure of a generated Revel application:
 
-docker exec -ti $(docker ps | grep postgres | awk '{ print $1}') /bin/bash
+    conf/             Configuration directory
+        app.conf      Main app configuration file
+        routes        Routes definition file
 
-psql -d criticalmaps -U bla
+    app/              App sources
+        init.go       Interceptor registration
+        controllers/  App controllers go here
+        views/        Templates directory
 
-## TODO
-cors header??
+    messages/         Message files
+
+    public/           Public static assets
+        css/          CSS files
+        js/           Javascript files
+        images/       Image files
+
+    tests/            Test suites
+
+
+## Help
+
+* The [Getting Started with Revel](http://revel.github.io/tutorial/gettingstarted.html).
+* The [Revel guides](http://revel.github.io/manual/index.html).
+* The [Revel sample apps](http://revel.github.io/examples/index.html).
+* The [API documentation](https://godoc.org/github.com/revel/revel).
+

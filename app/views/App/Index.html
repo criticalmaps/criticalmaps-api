@@ -1,0 +1,40 @@
+{{set . "title" "Home"}}
+{{template "header.html" .}}
+
+<header class="jumbotron" style="background-color:#A9F16C">
+  <div class="container">
+    <div class="row">
+      <h1>It works!1</h1>
+      <h2>{{.result}}</h2>
+      <p></p>
+    </div>
+  </div>
+</header>
+
+
+<table>
+{{ range .gallery }}
+<tr>
+  <td>
+    <div>{{ .ID }}</div>
+  </td>
+  <td>
+    <a href="/image/{{ .ID }}"><img src="/thumbnail/{{ .ID }}"/></a>
+  </td>
+  <td>
+    <a href="/image/delete/{{ .ID }}" target="_blank">delete</a>
+  </td>
+</tr>
+{{ end }}
+</table>
+
+
+<div class="container">
+  <div class="row">
+    <div class="span6">
+      {{template "flash.html" .}}
+    </div>
+  </div>
+</div>
+
+{{template "footer.html" .}}

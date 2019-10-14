@@ -12,8 +12,8 @@ SET longitude = excluded.longitude,
     latitude = excluded.latitude,
     updated = CURRENT_TIMESTAMP;
 
- -- also save to locations archive
- -- INSERT INTO locations_archive(device, longitude, latitude)
- -- VALUES($1,
- --   $2,
- --   $3);
+-- also save to locations archive
+INSERT INTO locations_archive(device, longitude, latitude)
+VALUES($1,
+       $2,
+       $3);

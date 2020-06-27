@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/Jeffail/gabs"
@@ -13,9 +12,20 @@ type LocationsArchive struct {
 }
 
 func (c LocationsArchive) List() revel.Result {
+	// purge old data
+	DB.Exec(`DELETE FROM locations_archive 
+		WHERE created < (NOW() - INTERVAL '48 HOURS')`)
+
+	startEpoch := c.Params.Query.Get("start")
+	endEpoch := c.Params.Query.Get("end")
+
+	// retrieve archived data
 	rows, err := DB.Raw(`SELECT device, created, longitude, latitude 
 	FROM locations_archive 
-	WHERE created BETWEEN NOW() - INTERVAL '24 HOURS' AND NOW()`).Rows()
+	WHERE 
+	created BETWEEN NOW() - INTERVAL '24 HOURS' AND NOW()
+	AND
+	created BETWEEN TO_TIMESTAMP(?) AND TO_TIMESTAMP(?)`, startEpoch, endEpoch).Rows()
 
 	if err != nil {
 		return c.RenderError(err)
@@ -31,8 +41,6 @@ func (c LocationsArchive) List() revel.Result {
 		var latitude string
 
 		rows.Scan(&device, &created, &longitude, &latitude)
-
-		fmt.Println(created)
 
 		if !jsonObj.Exists(device) {
 			jsonObj.Array(device)

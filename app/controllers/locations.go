@@ -38,16 +38,8 @@ func (c Locations) Post() revel.Result {
 		return c.RenderError(fmt.Errorf("coordinates are not valid: %q, %q", receivedLocation.Longitude, receivedLocation.Latitude))
 	}
 
-	receivedLocation.Updated = time.Now()
-
-	//TODO fix bug: wrong time is used here
-
-	// fmt.Printf("%#+v\n", receivedLocation)
-
-	// savedLocation := models.Location{}
-
-	DB.Where(models.Location{Device: receivedLocation.Device}).Attrs(receivedLocation).FirstOrInit(&receivedLocation)
-	DB.Save(&receivedLocation)
+	receivedLocation.Updated = time.Now().UTC()
+	DB.Where(models.Location{Device: receivedLocation.Device}).Assign(receivedLocation).FirstOrCreate(&receivedLocation)
 
 	return c.RenderJSON(receivedLocation)
 }

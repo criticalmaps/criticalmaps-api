@@ -6,13 +6,13 @@ RUN mkdir -p /gopath
 ENV GOPATH=/gopath
 WORKDIR /gopath
 
-RUN go get -u github.com/revel/revel
-RUN go get -u github.com/revel/cmd/revel
-RUN go get -u github.com/jinzhu/gorm
-RUN go get -u github.com/lib/pq
-RUN go get -u github.com/revel/modules/static
-RUN go get -u github.com/Jeffail/gabs
-RUN go get -u github.com/mrjones/oauth
+RUN go get -u github.com/revel/revel \
+    go get -u github.com/revel/cmd/revel \
+    go get -u github.com/jinzhu/gorm \
+    go get -u github.com/lib/pq \
+    go get -u github.com/revel/modules/static \
+    go get -u github.com/Jeffail/gabs \
+    go get -u github.com/mrjones/oauth
 
 COPY . /gopath/src/github.com/criticalmaps/criticalmaps-api
 

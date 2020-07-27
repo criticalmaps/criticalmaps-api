@@ -3,7 +3,9 @@ package tests
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"time"
+
+	"github.com/criticalmaps/criticalmaps-api/app/models"
 
 	"github.com/revel/revel/testing"
 )
@@ -32,11 +34,10 @@ func (t *LocationTest) TestValidPosts() {
 		// basic request
 		`{"device":"726f10f23011c752e6b3f817578282bee914bc20","longitude":"-122084000","latitude":"37421998"}`,
 		// with color
-		`{"device":"726f10f23011c752e6b3f817578282bee914bc20","longitude":"-122084000","latitude":"37421998", "color": "#FF0000"}`,
+		`{"device":"726f10f23011c752e6b3f817578282bee914bc20","longitude":"-122084000","latitude":"37421998", "color": "FF0000"}`,
 	}
 
 	for _, payload := range validPayloads {
-		fmt.Println(payload)
 		t.Post(
 			"/v3/locations",
 			"application/json",
@@ -59,7 +60,6 @@ func (t *LocationTest) TestInvalidPosts() {
 	}
 
 	for _, payload := range validPayloads {
-		fmt.Println(payload)
 		t.Post(
 			"/v3/locations",
 			"application/json",
@@ -68,7 +68,52 @@ func (t *LocationTest) TestInvalidPosts() {
 	}
 }
 
+func (t *LocationTest) TestCorrectTimestamp() {
+	postBody := `{"device":"726f10f23011c752e6b3f817578282bee914bc20","longitude":"-122084000","latitude":"37421998"}`
+	t.Post(
+		"/v3/locations",
+		"application/json",
+		bytes.NewReader([]byte(postBody)))
+	t.Get("/v3/locations")
+	err, foundLocation := getLocationByDevice("726f10f23011c752e6b3f817578282bee914bc20", t.ResponseBody)
+	t.Assert(err == nil)
+	t.AssertOk()
+
+	// Assert that timestamp was updated within the last 5 seconds
+	t.Assert(time.Now().UTC().Add(-5*time.Second).Unix() < foundLocation.Updated.UTC().Unix())
+}
+
+func (t *LocationTest) TestCorrectLocation() {
+	postBody := `{"device":"726f10f23011c752e6b3f817578282bee914bc20","longitude":"1337","latitude":"1337"}`
+	t.Post(
+		"/v3/locations",
+		"application/json",
+		bytes.NewReader([]byte(postBody)))
+	t.Get("/v3/locations")
+	err, foundLocation := getLocationByDevice("726f10f23011c752e6b3f817578282bee914bc20", t.ResponseBody)
+	t.Assert(err == nil)
+	t.AssertOk()
+
+	// Assert that location will be changed
+	t.Assert(foundLocation.Latitude == "1337")
+	t.Assert(foundLocation.Longitude == "1337")
+}
+
 func isValidJSONArray(s string) bool {
 	var js []map[string]interface{}
 	return json.Unmarshal([]byte(s), &js) == nil
+}
+
+func getLocationByDevice(device string, locationsResponse []byte) (error, models.Location) {
+	var locations []models.Location
+	err := json.Unmarshal(locationsResponse, &locations)
+
+	var foundLocation models.Location
+	for _, location := range locations {
+		if location.Device == device {
+			foundLocation = location
+		}
+	}
+
+	return err, foundLocation
 }

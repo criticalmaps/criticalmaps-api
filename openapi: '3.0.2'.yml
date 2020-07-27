@@ -1,0 +1,27 @@
+openapi: '3.0.2'
+info:
+  title: Critical Maps API
+  version: '1.0'
+servers:
+  - url: http://localhost/v3
+paths:
+  /locations:
+    post:
+      parameters:
+        - in: body
+          name: user
+          description: Send new location 
+          schema:
+            type: object
+            required:
+              - userName
+            properties:
+              userName:
+                type: string
+              firstName:
+                type: string
+              lastName:
+                type: string
+      responses:
+        201:
+          description: Created

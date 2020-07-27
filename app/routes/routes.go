@@ -114,3 +114,42 @@ func (_ tStatic) ServeModuleDir(
 }
 
 
+type tTestRunner struct {}
+var TestRunner tTestRunner
+
+
+func (_ tTestRunner) Index(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("TestRunner.Index", args).URL
+}
+
+func (_ tTestRunner) Suite(
+		suite string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "suite", suite)
+	return revel.MainRouter.Reverse("TestRunner.Suite", args).URL
+}
+
+func (_ tTestRunner) Run(
+		suite string,
+		test string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "suite", suite)
+	revel.Unbind(args, "test", test)
+	return revel.MainRouter.Reverse("TestRunner.Run", args).URL
+}
+
+func (_ tTestRunner) List(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("TestRunner.List", args).URL
+}
+
+

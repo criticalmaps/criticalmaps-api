@@ -2,6 +2,10 @@ package controllers
 
 import (
 	"errors"
+	"fmt"
+	"time"
+
+	"regexp"
 
 	"github.com/criticalmaps/criticalmaps-api/app/models"
 	"github.com/revel/revel"
@@ -22,24 +26,42 @@ func (c Locations) List() revel.Result {
 	return c.RenderJSON(location)
 }
 
-type MyData struct {
-	Device    string
-	Longitude string
-	Latitude  string
-}
-
 func (c Locations) Post() revel.Result {
-	data := MyData{}
-	c.Params.BindJSON(&data)
+	receivedLocation := models.Location{}
+	c.Params.BindJSON(&receivedLocation)
 
-	return c.RenderJSON(data)
-
-	location := []models.Location{}
-
-	result := DB.Find(&location)
-	if result.Error != nil {
-		return c.RenderError(errors.New("Record Not Found"))
+	if receivedLocation.Device == "" || receivedLocation.Latitude == "" || receivedLocation.Longitude == "" {
+		return c.RenderError(fmt.Errorf("required parameters were left empty"))
 	}
 
-	return c.RenderJSON(location)
+	if !c.isValidCoordinateFormat(receivedLocation.Latitude, receivedLocation.Longitude) {
+		return c.RenderError(fmt.Errorf("coordinates are not valid: %q, %q", receivedLocation.Longitude, receivedLocation.Latitude))
+	}
+
+	receivedLocation.Updated = time.Now()
+
+	//TODO fix bug: wrong time is used here
+
+	// fmt.Printf("%#+v\n", receivedLocation)
+
+	// savedLocation := models.Location{}
+
+	DB.Where(models.Location{Device: receivedLocation.Device}).Attrs(receivedLocation).FirstOrInit(&receivedLocation)
+	DB.Save(&receivedLocation)
+
+	return c.RenderJSON(receivedLocation)
+}
+
+func (c Locations) isValidCoordinateFormat(latitude string, longitude string) bool {
+	regex := "^[-+]?[0-9]+$"
+
+	matched, err := regexp.Match(regex, []byte(latitude))
+	if !matched || err != nil {
+		return false
+	}
+	matched, err = regexp.Match(regex, []byte(longitude))
+	if !matched || err != nil {
+		return false
+	}
+	return true
 }

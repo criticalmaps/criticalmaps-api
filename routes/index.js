@@ -4,9 +4,9 @@ var debug = require('debug')('http');
 var QueryFile = require('pg-promise').QueryFile;
 var moment = require('moment')
 
-var QUERY_FILE_SAVE_LOCATIONS = QueryFile('sql/save_locations.sql')
-var QUERY_FILE_RETRIEVE_LOCATIONS = QueryFile('sql/retrieve_locations.sql')
-var QUERY_FILE_SAVE_MESSAGES = QueryFile('sql/save_messages.sql')
+var QUERY_FILE_SAVE_LOCATIONS = new QueryFile('sql/save_locations.sql')
+var QUERY_FILE_RETRIEVE_LOCATIONS = new QueryFile('sql/retrieve_locations.sql')
+var QUERY_FILE_SAVE_MESSAGES = new QueryFile('sql/save_messages.sql')
 
 var mainExchange = function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');

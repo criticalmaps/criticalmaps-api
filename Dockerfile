@@ -1,15 +1,17 @@
-FROM node:6
+FROM node:12
 
-RUN apt-get update -y && \
-  	apt-get upgrade -y && \
-    apt-get install -y git GraphicsMagick
+RUN apt-get update -y \
+    && apt-get upgrade -y \
+    && apt-get install -y \
+    git \
+    graphicsmagick
 
 RUN mkdir -p /app/
 WORKDIR /app/
 
 RUN npm install -g node-pg-migrate pg --silent
 
-COPY package.json .
+COPY package*.json ./
 RUN npm install
 
 COPY . .

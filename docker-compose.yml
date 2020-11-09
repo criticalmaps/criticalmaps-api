@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: bla
       POSTGRES_DB: criticalmaps
     ports:
-      - "5433:5432"
+      - "5432:5432"
     restart: always
 
   web:
@@ -15,13 +15,15 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "80:3001"
     volumes:
       - .:/usr/src/app
+    depends_on:
+      - db
+    links:
+      - db
     environment:
       NODE_ENV: production
       DEBUG: "*"
-      DATABASE_URL: postgres://bla:bla@db:5433/criticalmaps
-    links:
-      - db
+      DATABASE_URL: postgres://bla:bla@db:5432/criticalmaps
     restart: always

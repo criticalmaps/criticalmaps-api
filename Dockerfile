@@ -6,14 +6,22 @@ RUN apt-get update -y \
     git \
     graphicsmagick
 
-RUN mkdir -p /app/
-WORKDIR /app/
-
-RUN npm install -g node-pg-migrate pg --silent
+RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+WORKDIR /home/node/app
 
 COPY package*.json ./
+
+USER node
+
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+ENV PATH=$PATH:/home/node/.npm-global/bin
+RUN npm install -g node-pg-migrate pg --silent
+
 RUN npm install
 
-COPY . .
+COPY --chown=node:node . .
 
-CMD npm start
+EXPOSE 3001
+CMD npm run migrate up && npm start
+
+USER node

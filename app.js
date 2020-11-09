@@ -2,7 +2,6 @@ var express = require('express');
 var pgp = require('pg-promise')();
 var bodyParser = require('body-parser');
 
-
 var app = express();
 
 // connect to databases
@@ -15,7 +14,7 @@ postgres_db = pgp({
   poolSize: 8
 });
 
-app.set('port', 80);
+app.set('port', 3001);
 
 app.use(bodyParser.json({
   limit: '5mb'

@@ -6,11 +6,7 @@ var app = express();
 
 // connect to databases
 postgres_db = pgp({
-  host: process.env.POSTGRES_HOST,
-  port: process.env.POSTGRES_PORT,
-  database: process.env.POSTGRES_DB,
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
+  connectionString: process.env.DATABASE_URL,
   poolSize: 8
 });
 

@@ -2,10 +2,10 @@
   "name": "criticalmaps-api",
   "version": "0.0.0",
   "private": true,
-  "main": "./app.js",
+  "main": "./dist/app.js",
   "scripts": {
     "migrate": "node-pg-migrate",
-    "start": "node app.js",
+    "start": "node ./dist/app.js",
     "test": "mocha test.js"
   },
   "dependencies": {

@@ -16,8 +16,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:3001"
-    volumes:
-      - .:/usr/src/app
     depends_on:
       - db
     links:

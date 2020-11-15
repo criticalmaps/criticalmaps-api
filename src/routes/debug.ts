@@ -1,10 +1,13 @@
-var express = require('express');
-var router = express.Router();
-var os = require('os');
-var counter = 0;
+import express from 'express';
+import os from 'os';
 
-router.get('/', function(req, res, next) {
-  var response = "";
+export const router = express.Router();
+
+let counter = 0;
+
+router.get('/', (_req, res) => {
+  let response = "";
+
   response += 'counter' + ' - ' + counter + '<br/>';
   response += 'os.hostname()' + ' - ' + os.hostname() + '<br/>';
   response += 'os.type()' + ' - ' + os.type() + '<br/>';
@@ -19,16 +22,6 @@ router.get('/', function(req, res, next) {
   response += 'os.networkInterfaces()' + ' - ' + os.networkInterfaces() + '<br/>';
   console.log(response);
 
-
-
-
-
   res.send(response);
-
-
   counter++;
-
-
 });
-
-module.exports = router;

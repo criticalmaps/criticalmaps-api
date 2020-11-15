@@ -1,50 +1,50 @@
-var express = require('express');
-var router = express.Router();
-var debug = require('debug')('http');
-var QueryFile = require('pg-promise').QueryFile;
+import express, { RequestHandler } from 'express'
+import multer from 'multer';
+import sizeOf from 'image-size';
+import gm from 'gm';
+import fs from 'fs';
+import { postgres_db } from '../app'
 
-var multer = require('multer');
-var upload = multer({
+export const router = express.Router();
+
+const upload = multer({
   dest: '/tmp/'
 })
-var sizeOf = require('image-size');
-var gm = require('gm');
-var fs = require('fs');
 
-var maxWidth = 100;
+const maxWidth = 100;
 
-var saveImage = function(req, res, next) {
-  var pathImage = req.file.path;
-  var pathThumbnail = req.file.path + "_thumb";
+const saveImage: RequestHandler = (req, res) => {
+  const pathImage = req.file.path;
+  const pathThumbnail = req.file.path + "_thumb";
 
-  var dimensions = sizeOf(pathImage);
+  const dimensions = sizeOf(pathImage);
 
-  var oldWidth = dimensions.width
-  var oldHeight = dimensions.height
+  const oldWidth = dimensions.width
+  const oldHeight = dimensions.height
 
-  var newWidth = maxWidth;
-  var newHeight = Math.floor(oldHeight * (maxWidth / oldWidth));
+  const newWidth = maxWidth;
+  const newHeight = Math.floor(oldHeight * (maxWidth / oldWidth));
 
   gm(req.file.path)
     .resize(newWidth, newHeight)
     .noProfile()
-    .write(pathThumbnail, function(err) {
+    .write(pathThumbnail, (err) => {
       if (err) {
         return res.send("error " + err);
       }
-      fs.readFile(pathImage, function(err, dataImage) {
-        fs.readFile(pathThumbnail, function(err, dataThumbnail) {
+      fs.readFile(pathImage, (err, dataImage) => {
+        fs.readFile(pathThumbnail, (err, dataThumbnail) => {
           postgres_db.none('INSERT INTO gallery(image, thumbnail, review_state, ip, longitude, latitude) \
             VALUES($1, $2, $3, $4, $5, $6)', [dataImage, dataThumbnail, 'pending',
-              req.connection.remoteAddress.replace(/^.*:/, ''),
-              JSON.parse(req.body.data).longitude,
-              JSON.parse(req.body.data).latitude
-            ])
-            .then(function() {
+            req.connection.remoteAddress.replace(/^.*:/, ''),
+            JSON.parse(req.body.data).longitude,
+            JSON.parse(req.body.data).latitude
+          ])
+            .then(() => {
               res.send("success")
               // use http 200
             })
-            .catch(function(error) {
+            .catch((error) => {
               res.send("error: " + error)
               console.log(error)
 
@@ -58,18 +58,18 @@ var saveImage = function(req, res, next) {
 router.post('/', upload.single('uploaded_file'), saveImage);
 router.post('/post.php', upload.single('uploaded_file'), saveImage);
 
-router.get('/', function(req, res, next) {
+router.get('/', (_req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   postgres_db.any("SELECT id, longitude, latitude FROM gallery")
-    .then(function(data) {
+    .then((data) => {
       res.send(data)
     })
 });
 
-router.get('/thumbnail/:id', function(req, res, next) {
+router.get('/thumbnail/:id', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   postgres_db.one("SELECT thumbnail FROM gallery WHERE id=$1", [req.params.id])
-    .then(function(data) {
+    .then((data) => {
       console.log(data);
       res.writeHead(200, {
         'Content-Type': 'image/jpeg'
@@ -79,10 +79,10 @@ router.get('/thumbnail/:id', function(req, res, next) {
     })
 });
 
-router.get('/image/:id', function(req, res, next) {
+router.get('/image/:id', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   postgres_db.one("SELECT image FROM gallery WHERE id=$1", [req.params.id])
-    .then(function(data) {
+    .then((data) => {
       console.log(data);
       res.writeHead(200, {
         'Content-Type': 'image/jpeg'
@@ -91,6 +91,3 @@ router.get('/image/:id', function(req, res, next) {
       res.end();
     });
 });
-
-
-module.exports = router;

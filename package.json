@@ -2,14 +2,13 @@
   "name": "criticalmaps-api",
   "version": "0.0.0",
   "private": true,
-  "main": "./dist/app.js",
+  "main": "./dist/app.ts",
   "scripts": {
     "migrate": "node-pg-migrate",
     "pretsc": "rm -rf ./dist",
     "tsc": "tsc",
     "posttsc": "cp -a ./src/sql ./dist/",
-    "start": "node ./dist/app.js",
-    "test": "mocha test.js"
+    "start": "node ./dist/app.ts",
   },
   "dependencies": {
     "body-parser": "^1.19.0",

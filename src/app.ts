@@ -1,13 +1,13 @@
-var express = require('express');
-var pgp = require('pg-promise')();
-var bodyParser = require('body-parser');
+import express from 'express';
+import bodyParser from 'body-parser';
+import pgPromise from 'pg-promise';
+const pgp = pgPromise();
 
-var app = express();
+const app = express();
 
 // connect to databases
-postgres_db = pgp({
-  connectionString: process.env.DATABASE_URL,
-  poolSize: 8
+const postgres_db = pgp({
+  connectionString: process.env.DATABASE_URL
 });
 
 app.set('port', 3001);
@@ -28,22 +28,28 @@ app.use(bodyParser.urlencoded({
 //   }));
 // });
 
-app.use('/postv2', require('./routes/index'));
-app.use('/exchange', require('./routes/index'));
-app.use('/', require('./routes/index'));
+import { router as index } from './routes/index';
+app.use('/postv2', index);
+app.use('/exchange', index);
+app.use('/', index);
 
-app.use('/twitter', require('./routes/twitter'));
-app.use('/twitter/get.php', require('./routes/twitter'));
+import { router as twitter } from './routes/twitter';
+app.use('/twitter', twitter);
+app.use('/twitter/get.php', twitter);
 
-app.use('/gallery', require('./routes/gallery'));
+import { router as gallery } from './routes/gallery';
+app.use('/gallery', gallery);
 
-app.use('/debug', require('./routes/debug'));
+import { router as debug } from './routes/debug';
+app.use('/debug', debug);
 
 
 if (!module.parent) {
-  app.listen(app.get('port'), function() {
+  app.listen(app.get('port'), function () {
     console.log('Server started on port ' + app.get('port'));
   })
 }
 
 module.exports = app;
+
+export {postgres_db}

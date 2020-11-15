@@ -1,68 +1,70 @@
-import chai from 'chai';
-import chaiHttp from 'chai-http';
-import { app } from './app';
+import chai from "chai";
+import chaiHttp from "chai-http";
+import { app } from "./app";
 
 const expect = chai.expect;
 
 chai.use(chaiHttp);
 
 const test_user_A = {
-  "device": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-  "location": {
-    "longitude": 12345,
-    "latitude": 54321
-  }
+  device: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+  location: {
+    longitude: 12345,
+    latitude: 54321,
+  },
 };
 
 const test_user_B_location_1 = {
-  "device": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-  "location": {
-    "longitude": 1,
-    "latitude": 1
-  }
+  device: "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+  location: {
+    longitude: 1,
+    latitude: 1,
+  },
 };
 
 const test_user_B_location_2 = {
-  "device": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
-  "location": {
-    "longitude": 2,
-    "latitude": 2
-  }
+  device: "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+  location: {
+    longitude: 2,
+    latitude: 2,
+  },
 };
 
-describe('test location logic', () => {
-  it('should not return own location', (done) => {
-    chai.request(app)
-      .post('/')
+describe("test location logic", () => {
+  it("should not return own location", (done) => {
+    chai
+      .request(app)
+      .post("/")
       .send(test_user_A)
       .end((err, res) => {
         expect(err).to.be.null;
         expect(res).to.have.status(200);
         expect(res).to.be.json;
-        console.log(res.body);
         expect(res.body.locations).to.not.include.keys(test_user_A.device);
         done();
       });
   });
 
-  it('should receive previous location from test user A', (done) => {
-    chai.request(app)
-      .post('/')
+  it("should receive previous location from test user A", (done) => {
+    chai
+      .request(app)
+      .post("/")
       .send(test_user_B_location_1)
       .end((err, res) => {
         expect(err).to.be.null;
         expect(res).to.have.status(200);
         expect(res).to.be.json;
-        console.log(res.body);
-        expect(res.body.locations[test_user_A.device])
-          .to.include(test_user_A.location);
+        expect(res.body.locations[test_user_A.device]).to.include(
+          test_user_A.location
+        );
         done();
       });
   });
 
-  it('should save new location test user B', (done) => {
-    chai.request(app)
-      .post('/')
+  it("should save new location test user B", (done) => {
+    chai
+      .request(app)
+      .post("/")
       .send(test_user_B_location_2)
       .end((err, res) => {
         expect(err).to.be.null;
@@ -72,33 +74,19 @@ describe('test location logic', () => {
       });
   });
 
-  it('should receive new location from test user B', (done) => {
-    chai.request(app)
-      .post('/')
+  it("should receive new location from test user B", (done) => {
+    chai
+      .request(app)
+      .post("/")
       .send(test_user_A)
       .end((err, res) => {
         expect(err).to.be.null;
         expect(res).to.have.status(200);
         expect(res).to.be.json;
-        expect(res.body.locations[test_user_B_location_1.device])
-          .to.include(test_user_B_location_2.location);
+        expect(res.body.locations[test_user_B_location_1.device]).to.include(
+          test_user_B_location_2.location
+        );
         done();
       });
   });
-
-
-  // describe('test messaging logic', () => {
-  //   it('should not return own location', function(done) {
-  //     chai.request('http://' + host + ':' + port)
-  //       .post('/')
-  //       .send(test_user_A)
-  //       .end((err, res) => {
-  //         expect(err).to.be.null;
-  //         expect(res).to.have.status(200);
-  //         expect(res).to.be.json;
-  //         console.log(res.body)
-  //         expect(res.body.locations).to.not.include.keys(test_user_A.device);
-  //         done();
-  //       });
-  //   });
 });

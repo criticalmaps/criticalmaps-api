@@ -9,7 +9,8 @@
     "tsc": "tsc",
     "posttsc": "cp -a ./src/db/sql ./dist/db/sql",
     "start": "node ./dist/app.js",
-    "test": "mocha ./dist/test.js"
+    "test": "mocha ./dist/test.js",
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -34,7 +35,9 @@
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "eslint": "^7.13.0",
+    "eslint-config-prettier": "^6.15.0",
     "mocha": "^8.2.1",
+    "prettier": "^2.1.2",
     "typescript": "^4.0.5"
   }
 }

@@ -25,6 +25,6 @@ RUN npm run tsc
 COPY --chown=node:node ./migrations ./migrations
 
 EXPOSE 3001
-CMD npm run migrate up && npm start
+CMD npm run migrate up && npm test && npm start
 
 USER node

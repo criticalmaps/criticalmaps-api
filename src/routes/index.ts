@@ -1,13 +1,13 @@
 import express, { RequestHandler } from 'express';
 import moment from 'moment';
-import { QueryFile } from 'pg-promise';
 import { postgres_db } from '../app'
+import { mainExchangeDbQueries as sql } from '../db'
 
 export const router = express.Router();
 
-const QUERY_FILE_SAVE_LOCATIONS = new QueryFile('sql/save_locations.sql')
-const QUERY_FILE_RETRIEVE_LOCATIONS = new QueryFile('sql/retrieve_locations.sql')
-const QUERY_FILE_SAVE_MESSAGES = new QueryFile('sql/save_messages.sql')
+const QUERY_FILE_SAVE_LOCATIONS = sql.saveLocation;
+const QUERY_FILE_RETRIEVE_LOCATIONS = sql.retrieveLocations;
+const QUERY_FILE_SAVE_MESSAGES = sql.saveMessages;
 
 const mainExchange: RequestHandler = (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

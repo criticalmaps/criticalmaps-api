@@ -2,13 +2,14 @@
   "name": "criticalmaps-api",
   "version": "0.0.0",
   "private": true,
-  "main": "./dist/app.ts",
+  "main": "./dist/app.js",
   "scripts": {
     "migrate": "node-pg-migrate",
     "pretsc": "rm -rf ./dist",
     "tsc": "tsc",
-    "posttsc": "cp -a ./src/sql ./dist/",
-    "start": "node ./dist/app.ts",
+    "posttsc": "cp -a ./src/db/sql ./dist/db/sql",
+    "start": "node ./dist/app.js",
+    "test": "mocha ./dist/test.js"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -26,6 +27,7 @@
     "@tsconfig/node12": "^1.0.7",
     "@types/express": "^4.17.9",
     "@types/gm": "^1.18.9",
+    "@types/mocha": "^8.0.4",
     "@types/multer": "^1.4.4",
     "@typescript-eslint/eslint-plugin": "^4.7.0",
     "@typescript-eslint/parser": "^4.7.0",

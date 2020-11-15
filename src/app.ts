@@ -50,6 +50,4 @@ if (!module.parent) {
   })
 }
 
-module.exports = app;
-
-export {postgres_db}
+export { postgres_db, app }

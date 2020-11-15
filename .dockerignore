@@ -7,3 +7,4 @@ Dockerfile
 .gitignore
 .travis.yml
 README.md
+dist

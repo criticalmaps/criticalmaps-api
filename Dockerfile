@@ -18,7 +18,9 @@ RUN npm install -g node-pg-migrate pg --silent
 COPY --chown=node:node package*.json ./
 RUN npm install
 
+COPY --chown=node:node tsconfig.json ./
 COPY --chown=node:node ./src ./src
+RUN npm run tsc
 
 COPY --chown=node:node ./migrations ./migrations
 

@@ -13,8 +13,8 @@ type LocationsArchive struct {
 
 func (c LocationsArchive) List() revel.Result {
 	// purge old data
-	DB.Exec(`DELETE FROM locations_archive 
-		WHERE created < (NOW() - INTERVAL '48 HOURS')`)
+	//DB.Exec(`DELETE FROM locations_archive 
+	//	WHERE created < (NOW() - INTERVAL '48 HOURS')`)
 
 	startEpoch := c.Params.Query.Get("start")
 	endEpoch := c.Params.Query.Get("end")

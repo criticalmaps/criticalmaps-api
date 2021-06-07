@@ -22,7 +22,7 @@ func (c LocationsArchive) List() revel.Result {
 	// retrieve archived data
 	rows, err := DB.Raw(`SELECT device, created, longitude, latitude 
 	FROM locations_archive 
-	AND
+	WHERE
 	created BETWEEN TO_TIMESTAMP(?) AND TO_TIMESTAMP(?)`, startEpoch, endEpoch).Rows()
 
 	if err != nil {

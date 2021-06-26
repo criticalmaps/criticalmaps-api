@@ -1,17 +1,21 @@
-FROM node:6
+FROM golang:1.13-alpine
 
-RUN apt-get update -y && \
-  	apt-get upgrade -y && \
-    apt-get install -y git GraphicsMagick
+RUN apk add --no-cache git
 
-RUN mkdir -p /app/
-WORKDIR /app/
+RUN mkdir -p /gopath
+ENV GOPATH=/gopath
+WORKDIR /gopath
 
-RUN npm install -g node-pg-migrate pg --silent
+RUN go get github.com/revel/revel && \
+    go get github.com/revel/cmd/revel && \
+    go get github.com/jinzhu/gorm && \
+    go get github.com/lib/pq && \
+    go get github.com/revel/modules/static && \
+    go get github.com/Jeffail/gabs && \
+    go get github.com/mrjones/oauth
 
-COPY package.json .
-RUN npm install
+COPY . /gopath/src/github.com/criticalmaps/criticalmaps-api
 
-COPY . .
+WORKDIR /gopath/src/github.com/criticalmaps/criticalmaps-api
 
-CMD npm start
+CMD ["/gopath/bin/revel", "run"]
